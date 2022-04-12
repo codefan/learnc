@@ -45,7 +45,7 @@
                 "/EHsc",
                 "/Fe:",
                 "${fileDirname}\\${fileBasenameNoExtension}.exe",
-                "${fileDirname}\\*.c",
+                "${file}",
                 "${fileDirname}\\utils\\*.c"
             ],
             "options": {
