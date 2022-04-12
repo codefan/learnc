@@ -7,6 +7,8 @@
  */
 int ** readIntArrayFromFile(char * fileName);
 
+void writeIntArrayToFile(char * fileName,int ** intArray);
+
 void printIntArray(int ** intArray);
 
 void releaseIntArray(int ** intArray);

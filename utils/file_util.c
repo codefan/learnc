@@ -28,6 +28,23 @@ int ** readIntArrayFromFile(char * fileName){
     return result;
 }
 
+void writeIntArrayToFile(char * fileName,int ** intArray){
+    if(fileName == NULL || intArray == NULL){
+        return;
+    }
+    FILE* fpWrite = fopen(fileName, "w");
+
+    fprintf(fpWrite, "%d %d\n",  intArray[0][0], intArray[0][1]);
+
+    for(int i=0; i<intArray[0][0]; i++){        
+        for(int j=0; j<intArray[0][1]; j++){
+            fprintf(fpWrite, "%d ", intArray[i+1][j]);
+        }
+        fprintf(fpWrite, "\n");
+    }
+    fclose(fpWrite);
+}
+
 void printIntArray(int ** intArray){
     if(intArray == NULL){
         return;
