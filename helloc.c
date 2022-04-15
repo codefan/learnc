@@ -30,5 +30,3 @@ int main() {
     releaseIntArray(res);
     return 0;
 }
-
-
