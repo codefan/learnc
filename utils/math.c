@@ -23,7 +23,7 @@ void sortInt(int len, int * array){
 /**
  * int x 最大45
  */
-int fippolacArrary(int x){
+int fielachian(int x){
    int f1=1, f2=2;
    printf("1-%d ", f1);
    if(x==1){       

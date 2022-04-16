@@ -2,7 +2,7 @@
 #include "./utils/file_util.h"
 
 int main() {
-    fippolacArrary(8);
+    fielachian(8);
     printf("\r\n");
     /*
     int ** res = readIntArrayFromFile(".\\test\\input.txt");

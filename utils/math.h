@@ -5,6 +5,6 @@ void sortInt(int len, int * array);
 /**
  * int x 最大45
  */
-int fippolacArrary(int x);
+int fielachian(int x);
 
 #endif // _MATH_UTIL_
