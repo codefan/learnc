@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include "./utils/math.h"
 #include "./utils/file_util.h"
 
 int main() {
