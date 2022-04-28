@@ -8,14 +8,13 @@
  */
 int ** readIntArrayFromFile(char * fileName){
     FILE* fpRead = fopen(fileName, "r");
-    if (fpRead == NULL)
-	{
+    if (fpRead == NULL){
 		return NULL;
 	}
     int* firstLine = (int*)malloc(sizeof(int)*2);
     fscanf(fpRead, "%d", &firstLine[0]);
     fscanf(fpRead, "%d", &firstLine[1]);
-    int ** result = (int**)malloc(sizeof(int*)* (firstLine[0]+1));
+    int ** result = (int**)malloc(sizeof(int*)* (firstLine[0]));
     result[0] = firstLine;
     for(int i=0; i<firstLine[0]; i++){
         int * curLine = (int*)malloc(sizeof(int)*firstLine[1]);
@@ -66,4 +65,43 @@ void releaseIntArray(int ** intArray){
         free(intArray[i]);
     }
     free(intArray);
+}
+
+int ** readIntMatrixFromFile(char * fileName, int lines, int columns){
+     FILE* fpRead = fopen(fileName, "r");
+    if (fpRead == NULL){
+		return NULL;
+	}
+    int ** result = (int**)malloc(sizeof(int*)* lines);
+    for(int i=0; i<lines; i++){
+        int * curLine = (int*)malloc(sizeof(int)*columns);
+        for(int j=0; j<columns; j++){
+            fscanf(fpRead, "%d", &curLine[j]);
+        }
+        result[i] = curLine;
+    }    
+    fclose(fpRead);
+    return result;
+}
+
+void releaseIntMatrix(int ** intMAtrix, int lines){
+    if(intMAtrix == NULL){
+        return;
+    }
+    for(int i=0; i<lines; i++){   
+        free(intMAtrix[i]);
+    }
+    free(intMAtrix);
+}
+
+void printIntMatrix(int ** intMAtrix, int lines, int columns){
+    if(intMAtrix == NULL){
+        return;
+    }
+    for(int i=0; i<lines; i++){        
+        for(int j=0; j<columns; j++){
+            printf("%d ", intMAtrix[i][j]);
+        }
+        printf("\n");
+    }
 }
