@@ -6,7 +6,8 @@ int main() {
     int ** sudoku = readIntMatrixFromFile(".\\test\\sudoku.txt", 6, 6);
  
     int fillNum = 6;
-    while(fillNum>0){
+    int hasError = 0;
+    while(fillNum>0 && hasError==0){
         fillNum = 0;
         for(int i=0; i<6; i++){
             for(int j=0; j<6; j++){
@@ -38,14 +39,37 @@ int main() {
                         sudoku[i][j] = rv;
                         fillNum ++;
                     }
+
+                    if(rc==0){
+                        //出题错误，没有正确的解
+                        hasError ++;
+                    }
                 }            
             }
         }
     }
     
+    if(hasError>0){
+        printf("出题错误，没有正确的解:\n");
+    } else {
+        int notSure = 0;
+        for(int i=0; i<6; i++){
+            for(int j=0; j<6; j++){
+                if(sudoku[i][j]==0){
+                    notSure ++;
+                }
+            }
+        }
+        if(notSure == 0){
+            printf("找到唯一解:\n");
+        } else {
+            printf("不是唯一解，有%d个待确定的宫格:\n", notSure);
+        }
+    }
     printIntMatrix(sudoku, 6, 6);
 
     releaseIntMatrix(sudoku, 6);
+
     return 0;
 
 }
