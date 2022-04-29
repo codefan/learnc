@@ -99,37 +99,7 @@ int checkNotSureItems(int **sudoku, int matrix, int row, int col)
 }
 
 /**
- * 检查 i,j 位置是否可以 填写 value 值
- * @return 如果返回 0 表示冲突，1 表示可以
- */
-int checkItemConflict(int **sudoku, int matrix, int row, int col, int i, int j, int value)
-{
-    for (int k = 0; k < matrix; k++)
-    {
-        //检查行
-        if (sudoku[i][k] == value || sudoku[k][j] == value)
-        {
-            return 0;
-        }
-    }
-    //检查区域
-    int ar = i / row;
-    int ac = j / col;
-    for (int r = 0; r < row; r++)
-    {
-        for (int c = 0; c < col; c++)
-        {
-            if (sudoku[ar * row + r][ac * col + c] == value)
-            {
-                return 0;
-            }
-        }
-    }
-    return 1;
-}
-
-/**
- * 用宫内排除法来填充数独
+ * 排除法来填充数独， 行、列、宫内三种情况
  * @param sudoku 是一个二维数组，表示数独内容， 0 表示没有确定的数就是空
  * @param matrix 数据的维度，比如6宫 9宫
  * @param row 表示宫的行数
@@ -142,6 +112,7 @@ int inPalaceExclusion(int **sudoku, int matrix, int row, int col)
     do
     {
         fillNum = 0;
+        //宫内排除
         for (int i = 0; i < col; i++)
         {
             for (int j = 0; j < row; j++)
@@ -156,33 +127,188 @@ int inPalaceExclusion(int **sudoku, int matrix, int row, int col)
                     }
                 }
                 //对每一个空缺的数字，在空格中是填，检查是否有冲突
-                for (int k = 1; k < matrix + 1; k++)
+                for (int v = 1; v < matrix + 1; v++)
+                {
+                    if (checkData[v] == 0)
+                    {
+                        int canFillSum = 0;
+                        int fillRow, fillCol;
+                        for (int r = 0; r < row; r++)
+                        {
+                            for (int c = 0; c < col; c++)
+                            {
+                                if (sudoku[i * row + r][j * col + c] == 0)
+                                {
+                                    int conflict = 0;
+                                    //检查对用的列和行
+                                    for (int k = 0; k < matrix; k++)
+                                    {
+                                        if (sudoku[k][j * col + c] == v || sudoku[i * row + r][k] == v)
+                                        {
+                                            conflict = 1;
+                                            break;
+                                        }
+                                    }
+                                    if (conflict == 0)
+                                    {
+                                        canFillSum++;
+                                        fillRow = i * row + r;
+                                        fillCol = j * col + c;
+                                    }
+                                }
+                            }
+                        }
+                        //找到唯一可以填写的地方
+                        if (canFillSum == 1)
+                        {
+                            sudoku[fillRow][fillCol] = v;
+                            fillNum++;
+                        }
+                    }
+                }
+            }
+        }
+        // 行排除
+        for (int i = 0; i < matrix; i++)
+        {
+            //找到功能还没有确定的数
+            int checkData[20] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+            for (int j = 0; j < matrix; j++)
+            {
+                checkData[sudoku[i][j]]++;
+            }
+
+            for (int v = 1; v < matrix + 1; v++)
+            {
+                if (checkData[v] == 0)
                 {
                     int canFillSum = 0;
                     int fillRow, fillCol;
-                    for (int r = 0; r < row; r++)
+                    for (int j = 0; j < matrix; j++)
                     {
-                        for (int c = 0; c < col; c++)
+                        if (sudoku[i][j] != 0)
+                            continue;
+                        int conflict = 0;
+                        //检查对应列
+                        for (int k = 0; k < matrix; k++)
                         {
-                            int canFill = checkItemConflict(sudoku, matrix, row, col,
-                                                            i * row + r, j * col + c, k);
-                            if (canFill == 1)
+                            if (sudoku[k][j] == v)
                             {
-                                canFillSum++;
-                                fillRow = i * row + r;
-                                fillCol = j * col + c;
+                                conflict = 1;
+                                break;
                             }
+                        }
+                        if (conflict > 0)
+                        {
+                            continue;
+                        }
+                        //检查宫内
+                        int ar = i / row;
+                        int ac = j / col;
+                        for (int r = 0; r < row; r++)
+                        {
+                            for (int c = 0; c < col; c++)
+                            {
+                                if (sudoku[ar * row + r][ac * col + c] == v)
+                                {
+                                    conflict = 1;
+                                    break;
+                                }
+                            }
+                            if (conflict > 0)
+                            {
+                                break;
+                            }
+                        }
+
+                        if (conflict == 0)
+                        {
+                            canFillSum++;
+                            fillRow = i;
+                            fillCol = j;
                         }
                     }
                     //找到唯一可以填写的地方
                     if (canFillSum == 1)
                     {
-                        sudoku[fillRow][fillCol] = k;
+                        sudoku[fillRow][fillCol] = v;
                         fillNum++;
                     }
                 }
             }
         }
+
+        // 列排除
+        for (int j = 0; j < matrix; j++)
+        {
+            //找到功能还没有确定的数
+            int checkData[20] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+            for (int i = 0; i < matrix; i++)
+            {
+                checkData[sudoku[i][j]]++;
+            }
+
+            for (int v = 1; v < matrix + 1; v++)
+            {
+                if (checkData[v] == 0)
+                {
+                    int canFillSum = 0;
+                    int fillRow, fillCol;
+                    for (int i = 0; i < matrix; i++)
+                    {
+                        if (sudoku[i][j] != 0)
+                            continue;
+
+                        int conflict = 0;
+                        //检查对应行
+                        for (int k = 0; k < matrix; k++)
+                        {
+                            if (sudoku[i][k] == v)
+                            {
+                                conflict = 1;
+                                break;
+                            }
+                        }
+                        if (conflict > 0)
+                        {
+                            continue;
+                        }
+                        //检查宫内
+                        int ar = i / row;
+                        int ac = j / col;
+                        for (int r = 0; r < row; r++)
+                        {
+                            for (int c = 0; c < col; c++)
+                            {
+                                if (sudoku[ar * row + r][ac * col + c] == v)
+                                {
+                                    conflict = 1;
+                                    break;
+                                }
+                            }
+                            if (conflict > 0)
+                            {
+                                break;
+                            }
+                        }
+
+                        if (conflict == 0)
+                        {
+                            canFillSum++;
+                            fillRow = i;
+                            fillCol = j;
+                        }
+                    }
+                    //找到唯一可以填写的地方
+                    if (canFillSum == 1)
+                    {
+                        sudoku[fillRow][fillCol] = v;
+                        fillNum++;
+                    }
+                }
+            }
+        }
+
         fillTotal = fillTotal + fillNum;
     } while (fillNum > 0); //如果一轮循环一个也没有找到，则推出循环
     return fillTotal;
@@ -197,7 +323,42 @@ void sudokuSolution(char *filename, int matrix, int row, int col)
     }
 
     int **sudoku = readIntMatrixFromFile(filename, matrix, matrix);
+    int success = 0;
+    int step = 0;
+    int fillCount = 0;
+    while (step < 2 || fillCount > 0)
+    {
+        if (step % 2 == 0)
+        {
+            fillCount = fillAssuredItem(sudoku, matrix, row, col);
+            // printIntMatrix(sudoku, matrix, matrix);
+        }
+        else
+        {
+            fillCount = inPalaceExclusion(sudoku, matrix, row, col);
+        }
+        if (fillCount < 0)
+        {
+            break;
+        }
 
+        int notSure = checkNotSureItems(sudoku, matrix, row, col);
+        if (notSure == 0)
+        {
+            success = 1;
+            break;
+        }
+
+        step++;
+    }
+    if (success)
+    {
+        printf("成功找到解\n");
+    }
+    else
+    {
+        printf("没有找到解\n");
+    }
     printIntMatrix(sudoku, matrix, matrix);
 
     releaseIntMatrix(sudoku, matrix);
