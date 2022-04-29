@@ -314,15 +314,8 @@ int inPalaceExclusion(int **sudoku, int matrix, int row, int col)
     return fillTotal;
 }
 
-void sudokuSolution(char *filename, int matrix, int row, int col)
+int analyseSolution(int **sudoku, int matrix, int row, int col)
 {
-    if (col * row != matrix || matrix > 16)
-    {
-        printf("输入的参数不正确！\n");
-        return;
-    }
-
-    int **sudoku = readIntMatrixFromFile(filename, matrix, matrix);
     int success = 0;
     int step = 0;
     int fillCount = 0;
@@ -351,16 +344,118 @@ void sudokuSolution(char *filename, int matrix, int row, int col)
 
         step++;
     }
-    if (success)
+    return success;
+}
+
+int violenceSolution(int **sudoku, int matrix, int row, int col)
+{
+    // 找到第一个空格
+    int findSpace = 0;
+    int spaceR, spaceC;
+    for (int i = 0; i < matrix; i++)
+    {
+        for (int j = 0; j < matrix; j++)
+        {
+            if (sudoku[i][j] == 0)
+            {
+                findSpace = 1;
+                spaceR = i;
+                spaceC = j;
+                break;
+            }
+        }
+        if (findSpace == 1)
+        {
+            break;
+        }
+    }
+    if (findSpace == 0)
+    { //没有空格，填写完成
+        return 1;
+    }
+
+    //检查一下这个点可以填写多少个值
+    int checkData[20] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+    for (int k = 0; k < matrix; k++)
+    {
+        //检查行
+        checkData[sudoku[spaceR][k]]++;
+        //检查列
+        checkData[sudoku[k][spaceC]]++;
+    }
+    //检查区域
+    int ar = spaceR / row;
+    int ac = spaceC / col;
+    for (int r = 0; r < row; r++)
+    {
+        for (int c = 0; c < col; c++)
+        {
+            checkData[sudoku[ar * row + r][ac * col + c]]++;
+        }
+    }
+    //找到唯一可以填写的数据
+    int rc = 0;
+    int rv[20] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+
+    for (int k = 1; k < matrix + 1; k++)
+    {
+        if (checkData[k] == 0)
+        {
+            rv[rc] = k;
+            rc++;
+        }
+    }
+    if (rc == 1)
+    { // 只有一种情况，填写这个空格后继续
+        sudoku[spaceR][spaceC] = rv[0];
+        //继续填写下一个空格
+        return violenceSolution(sudoku, matrix, row, col);
+    }
+
+    if (rc == 0)
+    { // 猜测的数据有问题，需要回溯
+        return -1;
+    }
+
+    //复制一份当前状态
+    int **copySudoku = allocateMatrix(matrix, matrix);
+    copyIntMatrix(copySudoku, sudoku, matrix, matrix);
+    for (int i = 0; i < rc; i++)
+    {
+        sudoku[spaceR][spaceC] = rv[i];
+        int nRes = violenceSolution(sudoku, matrix, row, col);
+        if (nRes == 1)
+        {
+            releaseIntMatrix(copySudoku, matrix);
+            return 1;
+        }
+        //恢复数独
+        copyIntMatrix(sudoku, copySudoku, matrix, matrix);
+    }
+    releaseIntMatrix(copySudoku, matrix);
+    //没有找到有效的解， 需要回溯
+    return -1;
+}
+
+void sudokuSolution(char *filename, int matrix, int row, int col)
+{
+    if (col * row != matrix || matrix > 16)
+    {
+        printf("输入的参数不正确！\n");
+        return;
+    }
+
+    int **sudoku = readIntMatrixFromFile(filename, matrix, matrix);
+    int success = violenceSolution(sudoku, matrix, row, col);
+    if (success > 0)
     {
         printf("成功找到解\n");
     }
     else
     {
-        printf("没有找到解\n");
+        printf("没有找到解, 可能出题错误或者有多个解。\n");
     }
     printIntMatrix(sudoku, matrix, matrix);
-
     releaseIntMatrix(sudoku, matrix);
 }
 
