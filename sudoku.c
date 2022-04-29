@@ -314,6 +314,10 @@ int inPalaceExclusion(int **sudoku, int matrix, int row, int col)
     return fillTotal;
 }
 
+/**
+ * 模拟人工填写数独的思路，先找唯一值直接填写，
+ * 再通过排除法找到唯一可以填写的单元格，如此往复。
+ */
 int analyseSolution(int **sudoku, int matrix, int row, int col)
 {
     int success = 0;
