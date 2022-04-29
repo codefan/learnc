@@ -320,14 +320,14 @@ int analyseSolution(int **sudoku, int matrix, int row, int col)
     int step = 0;
     int fillCount = 0;
     while (step < 2 || fillCount > 0)
-    {
+    { // step<2 确保两种方法都执行一次
         if (step % 2 == 0)
-        {
+        { // 先找只有一种可能的空格，填起来
             fillCount = fillAssuredItem(sudoku, matrix, row, col);
             // printIntMatrix(sudoku, matrix, matrix);
         }
         else
-        {
+        { // 再通过排除法，找到只能填写到一个单元格的数字
             fillCount = inPalaceExclusion(sudoku, matrix, row, col);
         }
         if (fillCount < 0)
@@ -346,7 +346,9 @@ int analyseSolution(int **sudoku, int matrix, int row, int col)
     }
     return success;
 }
-
+/**
+ * 回溯法，暴力求解，代码很简洁
+ */
 int violenceSolution(int **sudoku, int matrix, int row, int col)
 {
     // 找到第一个空格
@@ -437,6 +439,15 @@ int violenceSolution(int **sudoku, int matrix, int row, int col)
     return -1;
 }
 
+/**
+ * 数独求解算法，从文本文件中读取数独方阵，比如 9*9， 6*6， 4*4等等 matrix
+ * row、col 定义数独的宫格大小，比如 3*3 ，2*3 ，2*2 等等
+ * 这个文件中有两种求解法，一种模拟人工填写数独的思路，先找唯一值直接填写，
+ * 再通过排除法找到唯一可以填写的单元格，如此往复。
+ * 另一中算法为回溯法，先找到第一个空格，检查可以填写的值，如果是一个直接填写
+ * 如果有多个可以填写，先随便填写一个（选最小的）然后继续，如果后续冲突（找不到解）
+ * 就试下一个值（回溯）。
+ */
 void sudokuSolution(char *filename, int matrix, int row, int col)
 {
     if (col * row != matrix || matrix > 16)
