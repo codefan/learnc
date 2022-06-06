@@ -348,7 +348,7 @@ int analyseSolution(int **sudoku, int matrix, int row, int col)
 
         step++;
     }
-    return success;
+    return success == 1 ? step : -1;
 }
 /**
  * 回溯法，暴力求解，代码很简洁
@@ -357,6 +357,7 @@ int violenceSolution(int **sudoku, int matrix, int row, int col)
 {
     // 找到第一个空格
     int findSpace = 0;
+    int success = 0;
     int spaceR, spaceC;
     for (int i = 0; i < matrix; i++)
     {
@@ -377,6 +378,7 @@ int violenceSolution(int **sudoku, int matrix, int row, int col)
     }
     if (findSpace == 0)
     { //没有空格，填写完成
+        printIntMatrix(sudoku, matrix, matrix);
         return 1;
     }
 
@@ -420,7 +422,7 @@ int violenceSolution(int **sudoku, int matrix, int row, int col)
 
     if (rc == 0)
     { // 猜测的数据有问题，需要回溯
-        return -1;
+        return 0;
     }
 
     //复制一份当前状态
@@ -433,14 +435,14 @@ int violenceSolution(int **sudoku, int matrix, int row, int col)
         if (nRes == 1)
         {
             releaseIntMatrix(copySudoku, matrix);
-            return 1;
+            //return 1;
         }
         //恢复数独
         copyIntMatrix(sudoku, copySudoku, matrix, matrix);
     }
     releaseIntMatrix(copySudoku, matrix);
     //没有找到有效的解， 需要回溯
-    return -1;
+    return 0;
 }
 
 /**
@@ -461,21 +463,22 @@ void sudokuSolution(char *filename, int matrix, int row, int col)
     }
 
     int **sudoku = readIntMatrixFromFile(filename, matrix, matrix);
+    // violenceSolution analyseSolution
     int success = violenceSolution(sudoku, matrix, row, col);
     if (success > 0)
     {
-        printf("成功找到解\n");
+        printf("成功找到解,难度系数为%d\n", success);
     }
     else
     {
         printf("没有找到解, 可能出题错误或者有多个解。\n");
     }
-    printIntMatrix(sudoku, matrix, matrix);
+    //printIntMatrix(sudoku, matrix, matrix);
     releaseIntMatrix(sudoku, matrix);
 }
 
 int main()
 {
-    sudokuSolution(".\\test\\sudoku.txt", 9, 3, 3);
+    sudokuSolution(".\\test\\sudoku.txt", 6, 2, 3);
     return 0;
 }
