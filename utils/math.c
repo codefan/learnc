@@ -1,4 +1,4 @@
-﻿#include "math.h"
+#include "math.h"
 #include <stdio.h>
 
 void sortInt(int len, int * array){

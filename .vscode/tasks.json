@@ -37,6 +37,26 @@
               "kind": "build",
               "isDefault": true
             }
+        },
+         
+        {
+            "type": "shell",
+            "label": "build cpp",
+            "command": "g++",
+            "args": [
+                "${file}",
+                "${fileDirname}/utils/*.c",
+                "-o",
+                "${workspaceFolder}/${fileBasenameNoExtension}.out",
+                "-g"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": [
+                "$gcc"
+            ]
         }
     ]
     

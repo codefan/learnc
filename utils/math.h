@@ -1,4 +1,4 @@
-﻿#ifndef _MATH_UTIL_
+#ifndef _MATH_UTIL_
 #define _MATH_UTIL_
 
 void sortInt(int len, int * array);

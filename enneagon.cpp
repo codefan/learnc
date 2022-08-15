@@ -1,3 +1,5 @@
+#include <stdio.h>
+#include <stdlib.h>
 // https://www.zhihu.com/question/46235037
 /**
  * N芒星N个顶点,如果能找到一个数值k(k>1),每次跳过k个顶点,如果N次之后能将所有的顶点遍历,则判断可以一笔画出.

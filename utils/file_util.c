@@ -1,4 +1,5 @@
-﻿#include "file_util.h"
+#include "file_util.h"
+#include <stdlib.h>
 #include <stdio.h>
 
 /**
@@ -6,7 +7,7 @@
  * 第一行 存储 数组的行 和 列的数量
  * 从第二行开始为正式的数据
  */
-int **readIntArrayFromFile(char *fileName)
+int **readIntArrayFromFile(const char *fileName)
 {
     FILE *fpRead = fopen(fileName, "r");
     if (fpRead == NULL)
@@ -31,7 +32,7 @@ int **readIntArrayFromFile(char *fileName)
     return result;
 }
 
-void writeIntArrayToFile(char *fileName, int **intArray)
+void writeIntArrayToFile(const char *fileName, int **intArray)
 {
     if (fileName == NULL || intArray == NULL)
     {
@@ -82,7 +83,7 @@ void releaseIntArray(int **intArray)
     free(intArray);
 }
 
-int **readIntMatrixFromFile(char *fileName, int lines, int columns)
+int **readIntMatrixFromFile(const char *fileName, int lines, int columns)
 {
     FILE *fpRead = fopen(fileName, "r");
     if (fpRead == NULL)

@@ -15,6 +15,20 @@
             "environment": [],
             "console": "externalTerminal", 
             "preLaunchTask": "compileAndLink"
+        },
+        
+        {
+            "name": "(lldb) Launch",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/${fileBasenameNoExtension}.out",
+            "args": [],
+            "cwd": "${workspaceFolder}",
+            "stopAtEntry": false, // if true then stop at the main entry (function)
+            "environment": [],
+            "externalConsole": true,
+            "MIMode": "lldb",
+            "preLaunchTask": "build cpp"
         }
     ]
 }

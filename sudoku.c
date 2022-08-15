@@ -1,4 +1,4 @@
-﻿#include <stdio.h>
+#include <stdio.h>
 #include "./utils/file_util.h"
 
 /**
@@ -454,7 +454,7 @@ int violenceSolution(int **sudoku, int matrix, int row, int col)
  * 如果有多个可以填写，先随便填写一个（选最小的）然后继续，如果后续冲突（找不到解）
  * 就试下一个值（回溯）。
  */
-void sudokuSolution(char *filename, int matrix, int row, int col)
+void sudokuSolution(const char * filename, int matrix, int row, int col)
 {
     if (col * row != matrix || matrix > 16)
     {
@@ -479,6 +479,6 @@ void sudokuSolution(char *filename, int matrix, int row, int col)
 
 int main()
 {
-    sudokuSolution(".\\test\\sudoku.txt", 6, 2, 3);
+    sudokuSolution("./test/sudoku.txt", 6, 2, 3);
     return 0;
 }
