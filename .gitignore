@@ -3,3 +3,5 @@
 *.obj
 *.pdb
 .DS_Store
+*.out
+*.out.**
