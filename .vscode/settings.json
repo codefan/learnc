@@ -5,7 +5,10 @@
         "ostream": "c",
         "new": "c",
         "stdlib.h": "c",
-        "iostream": "cpp"
+        "iostream": "cpp",
+        "algorithm": "cpp",
+        "__config": "cpp",
+        "type_traits": "cpp"
     },
     "C_Cpp.errorSquiggles": "Disabled"
 }
