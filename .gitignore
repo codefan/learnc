@@ -2,7 +2,9 @@
 *.ilk
 *.obj
 *.pdb
+*.o
 .DS_Store
 *.out
 */*.out
 *.out.**
+*.layout

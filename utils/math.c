@@ -3,7 +3,7 @@
 
 void sortInt(int len, int *array)
 {
-    //å†’æ³¡
+    //Ã°ÅÝ
     for (int i = len - 1; i > 0; i--)
     {
         int sorted = 1;
@@ -25,7 +25,7 @@ void sortInt(int len, int *array)
 }
 
 /**
- * int x æœ€å¤§45
+ * int x ×î´ó45
  */
 int fielachian(int x)
 {
